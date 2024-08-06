@@ -1,13 +1,9 @@
 requests
 PyYAML
 beautifulsoup4
-psycopg2-binary
+psycopg2
 emoji
 pandas
-psycopg2-binary
-python-dotenv
 requests
 tabulate
 tqdm
-PyYAML
-redis

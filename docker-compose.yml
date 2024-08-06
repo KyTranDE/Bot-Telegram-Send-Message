@@ -1,26 +1,21 @@
-version: "2"
+version: '3.8'
+
 services:
-  # app1:
-  #   image: python:3.12.3
-  #   working_dir: /app
-  #   volumes:
-  #     - .:/app
-  #   ports:
-  #     - "1704:8000"
-  #   command: >
-  #     sh -c "pip install -r requirements.txt && python mainbonbanh.py"
-  #   restart: always
+  app1:
+    image: python:3.9
+    container_name: python_app1
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sh -c "pip install -r requirements.txt && python mainbonbanh.py"
 
   app2:
-    image: python:3.12.3
-    working_dir: /app2
+    image: python:3.9
+    container_name: python_app2
     volumes:
-      - .:/app2
-    ports:
-      - "1706:8000"
-    command: >
-      sh -c "pip install -r requirements.txt && python mainchotot.py"
-    restart: always
+      - .:/app
+    working_dir: /app
+    command: sh -c "pip install -r requirements.txt && python mainchotot.py"
 
   postgres:
     image: postgres:16
@@ -36,8 +31,8 @@ services:
     ports:
       - "5434:5432"
       
+networks:
+  mynetwork:
+
 volumes:
   postgres_data:
-
-networks:
-  bbsw-sport:
