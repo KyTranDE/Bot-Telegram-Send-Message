@@ -1,3 +1,16 @@
 url:
   urlbonbanh : 'https://bonbanh.com/oto-gia-duoi-200-trieu/page,{}'
   urlchotot : 'https://xe.chotot.com/mua-ban-oto-gia-duoi-200-trieu-sdpr1?page={}'
+
+# database:
+#   host: "localhost"
+#   port: "5434"
+#   user: "telebot"
+#   password: "telebot@123"
+#   database : "dbTelebot"
+
+database:
+  dbname: dbTelebot
+  user: telebot
+  password: telebot@123
+  host: postgres

@@ -3,11 +3,13 @@ import yaml
 from bs4 import BeautifulSoup
 import json
 from concurrent.futures import ThreadPoolExecutor
+import psycopg2
+from Utils.postgres_tool import PostgresTool
 
 with open('./config/config.yml', 'r') as f:
     config = yaml.safe_load(f)
     
-def getData(urlchotot):
+def getData(urlchotot,conn):
     response = requests.get(url=urlchotot)
     soup = BeautifulSoup(response.text, 'html.parser')
     all_results = soup.find_all('div', attrs={'tabindex':"0"})
@@ -20,14 +22,19 @@ def getData(urlchotot):
         newSoup = BeautifulSoup(newRequest.text, 'html.parser')
         data["description"] = newSoup.find('p', attrs={'itemprop':'description'}).text
         data["urlcar"] = "https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href')
-        print(json.dumps(data, ensure_ascii=False, indent=2))
+        
 
 def main():
+    database = config['database']
+    conn = PostgresTool(database['host'], database['user'], database['port'], database['password'], database['database'])
+
     urlchotot = config['url']['urlchotot']
     listUrl = [urlchotot.format(i) for i in range(1, 1000)]
-
+    args = [(url,conn) for url in listUrl]
     with ThreadPoolExecutor(max_workers=10) as executor:
-        executor.map(getData, listUrl)
+        executor.map(getData, args)
+
+    conn.close()
 
 if __name__ == '__main__':
     main()

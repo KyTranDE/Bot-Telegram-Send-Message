@@ -1,15 +1,15 @@
 version: "2"
 services:
-  app:
-    image: python:3.12.3
-    working_dir: /app
-    volumes:
-      - .:/app
-    ports:
-      - "1704:8000"
-    command: >
-      sh -c "pip install -r requirements.txt && python mainbonbanh.py"
-    restart: always
+  # app1:
+  #   image: python:3.12.3
+  #   working_dir: /app
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - "1704:8000"
+  #   command: >
+  #     sh -c "pip install -r requirements.txt && python mainbonbanh.py"
+  #   restart: always
 
   app2:
     image: python:3.12.3
@@ -31,6 +31,8 @@ services:
       POSTGRES_DB: dbTelebot
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/Untitled.sql:/docker-entrypoint-initdb.d/Untitled.sql
+
     ports:
       - "5434:5432"
       
