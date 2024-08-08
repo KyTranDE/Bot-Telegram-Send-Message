@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import json
 from concurrent.futures import ThreadPoolExecutor
 from Utils.postgres_tool import PostgresTool
+import time
 
 with open('./config/config.yml', 'r') as f:
     config = yaml.safe_load(f)
@@ -34,5 +35,7 @@ def main():
         executor.map(getData, listUrl)
 
 if __name__ == '__main__':
-    main()
+    while True:
+        main()
+        time.sleep(30*60) # 30 p
 
