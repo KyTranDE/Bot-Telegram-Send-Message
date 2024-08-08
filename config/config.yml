@@ -1,6 +1,7 @@
 url:
   urlbonbanh : 'https://bonbanh.com/oto-gia-duoi-200-trieu/page,{}'
-  urlchotot : 'https://xe.chotot.com/mua-ban-oto-gia-duoi-200-trieu-sdpr1?page={}'
+  urlchotot : 'https://xe.chotot.com/mua-ban-oto?page={}'
+  urlproxy : 'https://api.proxyscrape.com/v3/free-proxy-list/get?request=getproxies&skip={}&proxy_format=protocolipport&format=json&limit=15'
 
 database:
   host: "127.0.0.1"
@@ -9,8 +10,24 @@ database:
   password: "telebot@123"
   database : "dbTelebot"
 
-# database:
-#   dbname: dbTelebot
-#   user: telebot
-#   password: telebot@123
-#   host: postgres
+headers:
+  accept: 'application/json, text/plain, */*'
+  accept-language: 'vi,en-US;q=0.9,en;q=0.8,vi-VN;q=0.7,fr-FR;q=0.6,fr;q=0.5'
+  origin: 'https://vi.proxyscrape.com'
+  priority: 'u=1, i'
+  referer: 'https://vi.proxyscrape.com/'
+  sec-ch-ua: '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"'
+  sec-ch-ua-mobile: '?0'
+  sec-ch-ua-platform: "Windows"
+  sec-fetch-dest: 'empty'
+  sec-fetch-mode: 'cors'
+  sec-fetch-site: 'same-site'
+  user-agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
+
+params:
+  request: 'getproxies'
+  skip: {}
+  proxy_format: 'protocolipport'
+  format: 'json'
+  limit: '15'
+  timeout: '200'

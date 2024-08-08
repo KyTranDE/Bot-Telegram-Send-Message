@@ -30,7 +30,7 @@ def getData(urlchotot):
 def main():
 
     urlchotot = config['url']['urlchotot']
-    listUrl = [urlchotot.format(i) for i in range(1, 1000)]
+    listUrl = [urlchotot.format(i) for i in range(1, 4)]
 
     with ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(getData, listUrl)
