@@ -1,38 +1,12 @@
 version: '3.8'
 
 services:
-  app1:
-    image: python:3.9
-    container_name: python_app1
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: sh -c "pip install -r requirements.txt && python mainbonbanh.py"
-
-  app2:
-    image: python:3.9
-    container_name: python_app2
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: sh -c "pip install -r requirements.txt && python mainchotot.py"
-
-  postgres:
-    image: postgres:16
-    container_name: databaseTelegram
-    environment:
-      POSTGRES_USER: telebot
-      POSTGRES_PASSWORD: telebot@123
-      POSTGRES_DB: dbTelebot
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/Untitled.sql:/docker-entrypoint-initdb.d/Untitled.sql
-
+  redis:
+    image: redis:alpine
+    restart: always
+    hostname: cache-redis
+    container_name: cache-redis
     ports:
-      - "5434:5432"
-      
-networks:
-  mynetwork:
+      - '6377:6379'
+    command: redis-server
 
-volumes:
-  postgres_data:

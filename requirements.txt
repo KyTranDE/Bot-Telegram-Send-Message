@@ -7,3 +7,5 @@ pandas
 requests
 tabulate
 tqdm
+redis
+python-telegram-bot==2.4

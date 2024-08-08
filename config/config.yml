@@ -31,3 +31,9 @@ params:
   format: 'json'
   limit: '15'
   timeout: '200'
+
+
+redis_sv:
+    host : localhost #cache-redis
+    port : 6377
+    db : 0
