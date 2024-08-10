@@ -8,4 +8,4 @@ requests
 tabulate
 tqdm
 redis
-python-telegram-bot==2.4
+python-telegram-bot
