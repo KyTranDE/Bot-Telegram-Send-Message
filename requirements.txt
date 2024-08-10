@@ -1,7 +1,7 @@
 requests
 PyYAML
 beautifulsoup4
-psycopg2
+psycopg2-binary
 emoji
 pandas
 requests
@@ -9,3 +9,4 @@ tabulate
 tqdm
 redis
 python-telegram-bot
+nest-asyncio
