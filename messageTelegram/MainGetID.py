@@ -8,7 +8,7 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
-
+import json
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -36,8 +36,19 @@ async def check_password(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     password = update.message.text
     if password == CORRECT_PASSWORD:
         await update.message.reply_text(
-            f"Mật khẩu chính xác! Group ID là: {update.message.chat_id}"
+            f"Mật khẩu chính xác! Group ID là: {update.message.chat_id}"   
         )
+        with open('groupid.json', 'r+') as f:
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                data = []
+
+            data.append({"group_id": str(update.message.chat_id)})
+
+            f.seek(0)
+            json.dump(data, f, indent=4)
+            f.truncate()
         return ConversationHandler.END
     else:
         await update.message.reply_text(
