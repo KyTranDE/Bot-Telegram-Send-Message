@@ -34,7 +34,7 @@ def getproxy(urlproxy):
             listport.append(item['port'])
             
 def getData(urlbonban,df):
-    dfproxy = pd.read_csv('./data/proxys.csv')
+    # dfproxy = pd.read_csv('./data/proxys.csv')
     dfproxy = df
     proxies = dfproxy.to_dict('records')
     
