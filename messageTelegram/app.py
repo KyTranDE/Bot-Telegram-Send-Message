@@ -19,7 +19,7 @@ async def sendBot(data):
 
     # ID của nhóm chat. Bạn có thể lấy ID này bằng cách sử dụng @username_to_id_bot
     chat_id = '-4231092140'
-
+    
     # Tin nhắn mà bạn muốn gửi
     message = message_template.format(
         name=data['name'], price=data['price'], location=data['location'], url=data['urlcar'])
