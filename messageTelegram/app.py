@@ -17,12 +17,12 @@ async def sendBot(data):
 
     # đọc file json lấy ra danh sách GroupID
     with open('groupid.json', 'r') as f:
-        data = json.load(f)
+        group_data = json.load(f)
     
-    # sử lí những GroupID trùng nhau
-    chat_ids = []
-    for i in data:
-        chat_ids.append(i['group_id'])
+    # Xử lý những GroupID trùng nhau
+    chat_ids = list(set(item['group_id'] for item in group_data))
+
+    
 
     # Tin nhắn mà bạn muốn gửi
     message = message_template.format(
@@ -39,7 +39,7 @@ async def sendBot(data):
         sleep(1)
 
 #___________________________________________________________________________________________________________________________________________________________________________
-# def mainSendBot(data):                                                                                                                                                    |
+#                                                                                                                                                                           |
 #     asyncio.run(sendBot(data))                                                                                                                                            |
 #                                                                                                                                                                           |
 # data = {                                                                                                                                                                  |
