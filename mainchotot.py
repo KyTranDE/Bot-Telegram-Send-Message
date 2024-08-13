@@ -24,31 +24,133 @@ def getData(urlchotot):
     redis_set_key = "carchotot"
 
     for result in all_results:
-        newRequest = requests.get("https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href'))
-        newSoup = BeautifulSoup(newRequest.text, 'html.parser')
-        data = {}
-        data["name"] = newSoup.find('h1').text
-        data["price"] = newSoup.find('b', class_='p26z2wb').text
-        data["location"] = newSoup.find('span', class_ = "bwq0cbs flex-1").text
-        data["urlcar"] = "https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href')
-        data['image'] = "https://xe.chotot.com"+newSoup.findAll('img', attrs={'sizes':'100vw'})[1].get('src')
-        redis_key = f"{data}" 
-        exists = redis_client.sismember(redis_set_key, str(data))
-        if not exists:
-            redis_client.sadd(redis_set_key, str(data))
-            redis_client.expire(redis_set_key, 60*60*24)
-            redis_client.setex(redis_key, 60*60*24, str(data))
+        try:
+            newRequest = requests.get("https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href'))
+            newSoup = BeautifulSoup(newRequest.text, 'html.parser')
+            data = {}
+            data["name"] = newSoup.find('h1').text
+            data["price"] = newSoup.find('b', class_='p26z2wb').text
+            data["location"] = newSoup.find('span', class_ = "bwq0cbs flex-1").text
+            data["urlcar"] = "https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href')
+            data['image'] = "https://xe.chotot.com"+newSoup.findAll('img', attrs={'sizes':'100vw'})[1].get('src')
+            redis_key = f"{data}" 
+            exists = redis_client.sismember(redis_set_key, str(data))
+            if not exists:
+                redis_client.sadd(redis_set_key, str(data))
+                redis_client.expire(redis_set_key, 60*60*24*3)
+                redis_client.setex(redis_key, 60*60*24*3, str(data))
 
-            data = {k: (v if v != "None" else None) for k, v in data.items()}
-            # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
-            # send data telegram message
-            asyncio.run(sendBot(data))
-        else:
-            pass
+                data = {k: (v if v != "None" else None) for k, v in data.items()}
+                # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
+                # send data telegram message
+                try:
+                    asyncio.run(sendBot(data))
+                except:
+                    time.sleep(30)
+                    asyncio.run(sendBot(data))
+                time.sleep(10)
+            else:
+                pass
+        except:
+            print("erorr")
 
 def main():
-    urlchotot = config['url']['urlchotot']
-    listUrl = [urlchotot.format(i) for i in range(1, 10)]
+    listUrl = ['https://xe.chotot.com/mua-ban-oto-tp-ho-chi-minh?page=1',
+    'https://xe.chotot.com/mua-ban-oto-tp-ho-chi-minh?page=2',
+    'https://xe.chotot.com/mua-ban-oto-tp-ho-chi-minh?page=3',
+    'https://xe.chotot.com/mua-ban-oto-tp-ho-chi-minh?page=4',
+    'https://xe.chotot.com/mua-ban-oto-tp-ho-chi-minh?page=5',
+    'https://xe.chotot.com/mua-ban-oto-an-giang?page=1',
+    'https://xe.chotot.com/mua-ban-oto-an-giang?page=2',
+    'https://xe.chotot.com/mua-ban-oto-an-giang?page=3',
+    'https://xe.chotot.com/mua-ban-oto-an-giang?page=4',
+    'https://xe.chotot.com/mua-ban-oto-an-giang?page=5',
+    'https://xe.chotot.com/mua-ban-oto-ba-ria-vung-tau?page=1',
+    'https://xe.chotot.com/mua-ban-oto-ba-ria-vung-tau?page=2',
+    'https://xe.chotot.com/mua-ban-oto-ba-ria-vung-tau?page=3',
+    'https://xe.chotot.com/mua-ban-oto-ba-ria-vung-tau?page=4',
+    'https://xe.chotot.com/mua-ban-oto-ba-ria-vung-tau?page=5',
+    'https://xe.chotot.com/mua-ban-oto-bac-lieu?page=1',
+    'https://xe.chotot.com/mua-ban-oto-bac-lieu?page=2',
+    'https://xe.chotot.com/mua-ban-oto-bac-lieu?page=3',
+    'https://xe.chotot.com/mua-ban-oto-bac-lieu?page=4',
+    'https://xe.chotot.com/mua-ban-oto-bac-lieu?page=5',
+    'https://xe.chotot.com/mua-ban-oto-ben-tre?page=1',
+    'https://xe.chotot.com/mua-ban-oto-ben-tre?page=2',
+    'https://xe.chotot.com/mua-ban-oto-ben-tre?page=3',
+    'https://xe.chotot.com/mua-ban-oto-ben-tre?page=4',
+    'https://xe.chotot.com/mua-ban-oto-ben-tre?page=5',
+    'https://xe.chotot.com/mua-ban-oto-binh-duong?page=1',
+    'https://xe.chotot.com/mua-ban-oto-binh-duong?page=2',
+    'https://xe.chotot.com/mua-ban-oto-binh-duong?page=3',
+    'https://xe.chotot.com/mua-ban-oto-binh-duong?page=4',
+    'https://xe.chotot.com/mua-ban-oto-binh-duong?page=5',
+    'https://xe.chotot.com/mua-ban-oto-binh-phuoc?page=1',
+    'https://xe.chotot.com/mua-ban-oto-binh-phuoc?page=2',
+    'https://xe.chotot.com/mua-ban-oto-binh-phuoc?page=3',
+    'https://xe.chotot.com/mua-ban-oto-binh-phuoc?page=4',
+    'https://xe.chotot.com/mua-ban-oto-binh-phuoc?page=5',
+    'https://xe.chotot.com/mua-ban-oto-ca-mau?page=1',
+    'https://xe.chotot.com/mua-ban-oto-ca-mau?page=2',
+    'https://xe.chotot.com/mua-ban-oto-ca-mau?page=3',
+    'https://xe.chotot.com/mua-ban-oto-ca-mau?page=4',
+    'https://xe.chotot.com/mua-ban-oto-ca-mau?page=5',
+    'https://xe.chotot.com/mua-ban-oto-can-tho?page=1',
+    'https://xe.chotot.com/mua-ban-oto-can-tho?page=2',
+    'https://xe.chotot.com/mua-ban-oto-can-tho?page=3',
+    'https://xe.chotot.com/mua-ban-oto-can-tho?page=4',
+    'https://xe.chotot.com/mua-ban-oto-can-tho?page=5',
+    'https://xe.chotot.com/mua-ban-oto-dong-nai?page=1',
+    'https://xe.chotot.com/mua-ban-oto-dong-nai?page=2',
+    'https://xe.chotot.com/mua-ban-oto-dong-nai?page=3',
+    'https://xe.chotot.com/mua-ban-oto-dong-nai?page=4',
+    'https://xe.chotot.com/mua-ban-oto-dong-nai?page=5',
+    'https://xe.chotot.com/mua-ban-oto-dong-thap?page=1',
+    'https://xe.chotot.com/mua-ban-oto-dong-thap?page=2',
+    'https://xe.chotot.com/mua-ban-oto-dong-thap?page=3',
+    'https://xe.chotot.com/mua-ban-oto-dong-thap?page=4',
+    'https://xe.chotot.com/mua-ban-oto-dong-thap?page=5',
+    'https://xe.chotot.com/mua-ban-oto-hau-giang?page=1',
+    'https://xe.chotot.com/mua-ban-oto-hau-giang?page=2',
+    'https://xe.chotot.com/mua-ban-oto-hau-giang?page=3',
+    'https://xe.chotot.com/mua-ban-oto-hau-giang?page=4',
+    'https://xe.chotot.com/mua-ban-oto-hau-giang?page=5',
+    'https://xe.chotot.com/mua-ban-oto-kien-giang?page=1',
+    'https://xe.chotot.com/mua-ban-oto-kien-giang?page=2',
+    'https://xe.chotot.com/mua-ban-oto-kien-giang?page=3',
+    'https://xe.chotot.com/mua-ban-oto-kien-giang?page=4',
+    'https://xe.chotot.com/mua-ban-oto-kien-giang?page=5',
+    'https://xe.chotot.com/mua-ban-oto-long-an?page=1',
+    'https://xe.chotot.com/mua-ban-oto-long-an?page=2',
+    'https://xe.chotot.com/mua-ban-oto-long-an?page=3',
+    'https://xe.chotot.com/mua-ban-oto-long-an?page=4',
+    'https://xe.chotot.com/mua-ban-oto-long-an?page=5',
+    'https://xe.chotot.com/mua-ban-oto-soc-trang?page=1',
+    'https://xe.chotot.com/mua-ban-oto-soc-trang?page=2',
+    'https://xe.chotot.com/mua-ban-oto-soc-trang?page=3',
+    'https://xe.chotot.com/mua-ban-oto-soc-trang?page=4',
+    'https://xe.chotot.com/mua-ban-oto-soc-trang?page=5',
+    'https://xe.chotot.com/mua-ban-oto-tay-ninh?page=1',
+    'https://xe.chotot.com/mua-ban-oto-tay-ninh?page=2',
+    'https://xe.chotot.com/mua-ban-oto-tay-ninh?page=3',
+    'https://xe.chotot.com/mua-ban-oto-tay-ninh?page=4',
+    'https://xe.chotot.com/mua-ban-oto-tay-ninh?page=5',
+    'https://xe.chotot.com/mua-ban-oto-tien-giang?page=1',
+    'https://xe.chotot.com/mua-ban-oto-tien-giang?page=2',
+    'https://xe.chotot.com/mua-ban-oto-tien-giang?page=3',
+    'https://xe.chotot.com/mua-ban-oto-tien-giang?page=4',
+    'https://xe.chotot.com/mua-ban-oto-tien-giang?page=5',
+    'https://xe.chotot.com/mua-ban-oto-tra-vinh?page=1',
+    'https://xe.chotot.com/mua-ban-oto-tra-vinh?page=2',
+    'https://xe.chotot.com/mua-ban-oto-tra-vinh?page=3',
+    'https://xe.chotot.com/mua-ban-oto-tra-vinh?page=4',
+    'https://xe.chotot.com/mua-ban-oto-tra-vinh?page=5',
+    'https://xe.chotot.com/mua-ban-oto-vinh-long?page=1',
+    'https://xe.chotot.com/mua-ban-oto-vinh-long?page=2',
+    'https://xe.chotot.com/mua-ban-oto-vinh-long?page=3',
+    'https://xe.chotot.com/mua-ban-oto-vinh-long?page=4',
+    'https://xe.chotot.com/mua-ban-oto-vinh-long?page=5'
+ ]
     for url in listUrl: 
         getData(url)
 

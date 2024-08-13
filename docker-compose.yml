@@ -1,4 +1,4 @@
-version: '3.8'
+version: "2"
 
 services:
   redis:
@@ -7,29 +7,6 @@ services:
     hostname: cache-redis
     container_name: cache-redis
     ports:
-      - '6377:6379'
+      - '6379:6379'
     command: redis-server
 
-  mainbonbanh:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: python mainbonbanh.py
-    restart: always
-    volumes:
-      - .:/app
-    working_dir: /app
-    depends_on:
-      - redis
-
-  mainchotot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: python mainchotot.py
-    restart: always
-    volumes:
-      - .:/app
-    working_dir: /app
-    depends_on:
-      - redis

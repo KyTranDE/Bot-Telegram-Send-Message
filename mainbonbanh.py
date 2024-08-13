@@ -34,7 +34,7 @@ def getproxy(urlproxy):
             listport.append(item['port'])
             
 def getData(urlbonban,df):
-    dfproxy = pd.read_csv('./data/proxys.csv')
+    #dfproxy = pd.read_csv('./data/proxys.csv')
     dfproxy = df
     proxies = dfproxy.to_dict('records')
     
@@ -65,16 +65,17 @@ def getData(urlbonban,df):
                     exists = redis_client.sismember(redis_set_key, str(data))
                     if not exists:
                         redis_client.sadd(redis_set_key, str(data))
-                        redis_client.expire(redis_set_key, 60*60*24)
-                        redis_client.setex(redis_key, 60*60*24, str(data))
+                        redis_client.expire(redis_set_key, 60*60*24*3)
+                        redis_client.setex(redis_key, 60*60*24*3, str(data))
 
                         data = {k: (v if v != "None" else None) for k, v in data.items()}
                         # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
                         # send data telegram message
                         asyncio.run(sendBot(data))
+                        time.sleep(5)
                 return  
         except :
-            pass        
+            print("error")        
     
 def main():
 
@@ -87,8 +88,26 @@ def main():
     df = pd.DataFrame({'ip': listip, 'port': listport})
 
     # df.to_csv('./data/proxys.csv', index=False)
-    urlbonban = config['url']['urlbonbanh']
-    listUrl = [urlbonban.format(i) for i in range(1, 2)]
+    listUrl = ['https://bonbanh.com/tp-hcm/oto/page,1','https://bonbanh.com/tp-hcm/oto/page,2','https://bonbanh.com/tp-hcm/oto/page,3','https://bonbanh.com/tp-hcm/oto/page,4','https://bonbanh.com/tp-hcm/oto/page,5',
+               'https://bonbanh.com/an-giang/oto/page,1','https://bonbanh.com/an-giang/oto/page,2','https://bonbanh.com/an-giang/oto/page,3','https://bonbanh.com/an-giang/oto/page,4','https://bonbanh.com/an-giang/oto/page,5',
+               'https://bonbanh.com/ba-ria-vung-tau/oto/page,1','https://bonbanh.com/ba-ria-vung-tau/oto/page,2','https://bonbanh.com/ba-ria-vung-tau/oto/page,3','https://bonbanh.com/ba-ria-vung-tau/oto/page,4','https://bonbanh.com/ba-ria-vung-tau/oto/page,5',
+               'https://bonbanh.com/bac-lieu/oto/page,1','https://bonbanh.com/bac-lieu/oto/page,2','https://bonbanh.com/bac-lieu/oto/page,3','https://bonbanh.com/bac-lieu/oto/page,4','https://bonbanh.com/bac-lieu/oto/page,5',
+               'https://bonbanh.com/ben-tre/oto/page,1','https://bonbanh.com/ben-tre/oto/page,2','https://bonbanh.com/ben-tre/oto/page,3','https://bonbanh.com/ben-tre/oto/page,4','https://bonbanh.com/ben-tre/oto/page,5',
+               'https://bonbanh.com/binh-duong/oto/page,1','https://bonbanh.com/binh-duong/oto/page,2','https://bonbanh.com/binh-duong/oto/page,3','https://bonbanh.com/binh-duong/oto/page,4','https://bonbanh.com/binh-duong/oto/page,5',
+               'https://bonbanh.com/binh-phuoc/oto/page,1','https://bonbanh.com/binh-phuoc/oto/page,2','https://bonbanh.com/binh-phuoc/oto/page,3','https://bonbanh.com/binh-phuoc/oto/page,4','https://bonbanh.com/binh-phuoc/oto/page,5',
+               'https://bonbanh.com/ca-mau/oto/page,1','https://bonbanh.com/ca-mau/oto/page,2','https://bonbanh.com/ca-mau/oto/page,3','https://bonbanh.com/ca-mau/oto/page,4','https://bonbanh.com/ca-mau/oto/page,5',
+               'https://bonbanh.com/can-tho/oto/page,1','https://bonbanh.com/can-tho/oto/page,2','https://bonbanh.com/can-tho/oto/page,3','https://bonbanh.com/can-tho/oto/page,4','https://bonbanh.com/can-tho/oto/page,5',
+               'https://bonbanh.com/dong-nai/oto/page,1','https://bonbanh.com/dong-nai/oto/page,2','https://bonbanh.com/dong-nai/oto/page,3','https://bonbanh.com/dong-nai/oto/page,4','https://bonbanh.com/dong-nai/oto/page,5',
+               'https://bonbanh.com/dong-thap/oto/page,1','https://bonbanh.com/dong-thap/oto/page,2','https://bonbanh.com/dong-thap/oto/page,3','https://bonbanh.com/dong-thap/oto/page,4','https://bonbanh.com/dong-thap/oto/page,5',
+               'https://bonbanh.com/hau-giang/oto/page,1','https://bonbanh.com/hau-giang/oto/page,2','https://bonbanh.com/hau-giang/oto/page,3','https://bonbanh.com/hau-giang/oto/page,4','https://bonbanh.com/hau-giang/oto/page,5',
+               'https://bonbanh.com/kien-giang/oto/page,1','https://bonbanh.com/kien-giang/oto/page,2','https://bonbanh.com/kien-giang/oto/page,3','https://bonbanh.com/kien-giang/oto/page,4','https://bonbanh.com/kien-giang/oto/page,5',
+               'https://bonbanh.com/long-an/oto/page,1','https://bonbanh.com/long-an/oto/page,2','https://bonbanh.com/long-an/oto/page,3','https://bonbanh.com/long-an/oto/page,4','https://bonbanh.com/long-an/oto/page,5',
+               'https://bonbanh.com/soc-trang/oto/page,1','https://bonbanh.com/soc-trang/oto/page,2','https://bonbanh.com/soc-trang/oto/page,3','https://bonbanh.com/soc-trang/oto/page,4','https://bonbanh.com/soc-trang/oto/page,5',
+               'https://bonbanh.com/tay-ninh/oto/page,1','https://bonbanh.com/tay-ninh/oto/page,2','https://bonbanh.com/tay-ninh/oto/page,3','https://bonbanh.com/tay-ninh/oto/page,4','https://bonbanh.com/tay-ninh/oto/page,5',
+               'https://bonbanh.com/tien-giang/oto/page,1','https://bonbanh.com/tien-giang/oto/page,2','https://bonbanh.com/tien-giang/oto/page,3','https://bonbanh.com/tien-giang/oto/page,4','https://bonbanh.com/tien-giang/oto/page,5',
+               'https://bonbanh.com/tra-vinh/oto/page,1','https://bonbanh.com/tra-vinh/oto/page,2','https://bonbanh.com/tra-vinh/oto/page,3','https://bonbanh.com/tra-vinh/oto/page,4','https://bonbanh.com/tra-vinh/oto/page,5',
+               'https://bonbanh.com/vinh-long/oto/page,1','https://bonbanh.com/vinh-long/oto/page,2','https://bonbanh.com/vinh-long/oto/page,3','https://bonbanh.com/vinh-long/oto/page,4','https://bonbanh.com/vinh-long/oto/page,5',
+               ]
     for url in listUrl:
         getData(url,df)
 
