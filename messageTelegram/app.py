@@ -2,7 +2,15 @@ import asyncio
 from telegram import Bot
 from time import sleep
 import json
+from Utils import postgres_tool
+import yaml
 
+
+with open('./config/config.yml', 'r') as f:
+    config = yaml.safe_load(f)
+
+database = config["database"]
+conn = postgres_tool.PostgresTool(**database)
 
 async def sendBot(data):
     message_template = """
@@ -37,6 +45,17 @@ async def sendBot(data):
             parse_mode='HTML'
         )
         sleep(1)
+
+# get data từ database rồi send message
+def main():
+    query = "SELECT * FROM car_data ORDER BY id DESC LIMIT 10"
+    data = conn.execute_query(query)
+    for item in data:
+        asyncio.run(sendBot(item))
+
+
+
+
 
 #___________________________________________________________________________________________________________________________________________________________________________
 #                                                                                                                                                                           |

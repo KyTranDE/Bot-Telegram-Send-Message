@@ -12,9 +12,9 @@ services:
     image: postgres:16
     container_name: postgres_16
     environment:
-      POSTGRES_USER: botdatabase
-      POSTGRES_PASSWORD: botdatabase
-      POSTGRES_DB: botdatabase
+      POSTGRES_USER: botsendtele
+      POSTGRES_PASSWORD: botsendtele
+      POSTGRES_DB: botsendtele
     ports:
       - "5432:5432"
     volumes:
@@ -24,29 +24,6 @@ services:
     networks:
       - db_network
 
-  # mainbonbanh:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: python mainbonbanh.py
-  #   restart: always
-  #   volumes:
-  #     - .:/app
-  #   working_dir: /app
-  #   depends_on:
-  #     - redis
-
-  # mainchotot:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: python mainchotot.py
-  #   restart: always
-  #   volumes:
-  #     - .:/app
-  #   working_dir: /app
-  #   depends_on:
-  #     - redis
 
 volumes:
   db_data:

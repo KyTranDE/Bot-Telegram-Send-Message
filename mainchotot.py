@@ -13,9 +13,9 @@ nest_asyncio.apply()
 with open('./config/config.yml', 'r') as f:
     config = yaml.safe_load(f)
 
-redis_sv = config['redis_sv']
-print(redis_sv)
-redis_client = redis.Redis(**redis_sv)
+# redis_sv = config['redis_sv']
+# print(redis_sv)
+# redis_client = redis.Redis(**redis_sv)
 
 def getData(urlchotot):
     try:

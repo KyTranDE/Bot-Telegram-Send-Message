@@ -6,9 +6,9 @@ url:
 database:
   host: "localhost"
   port: "5432"
-  user: "botdatabase"
-  password: "botdatabase"
-  database : "botdatabase"
+  user: "botsendtele"
+  password: "botsendtele"
+  database : "botsendtele"
 
 headers:
   accept: 'application/json, text/plain, */*'

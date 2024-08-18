@@ -10,15 +10,16 @@ from messageTelegram.app import sendBot
 import asyncio
 import nest_asyncio
 import time
+from Utils import postgres_tool
 
 nest_asyncio.apply()
 
 with open('./config/config.yml', 'r') as f:
     config = yaml.safe_load(f)
 
-redis_sv = config['redis_sv']
-print(redis_sv)
-redis_client = redis.Redis(**redis_sv)
+# redis_sv = config['redis_sv']
+# print(redis_sv)
+# redis_client = redis.Redis(**redis_sv)
 
 urlproxy = config['url']['urlproxy']
 listip = []
@@ -44,8 +45,6 @@ def getData(urlbonban,df):
             "http": f"http://{proxy['ip']}:{proxy['port']}",
             "https": f"http://{proxy['ip']}:{proxy['port']}"
         }
-        # print(proxy_dict)
-        redis_set_key = "carbonbanh"
 
         try:
             response = requests.get(url=urlbonban, proxies=proxy_dict, timeout=10)   
@@ -53,6 +52,8 @@ def getData(urlbonban,df):
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, 'html.parser')
                 all_results = soup.find_all('li', class_=['car-item row1','car-item row2'])
+                db_config = config["database"]    
+                conn =  postgres_tool.PostgresTool(**db_config)
                 for result in all_results:
                     data = {}
                     data["name"] = result.find('h3').text
@@ -60,18 +61,9 @@ def getData(urlbonban,df):
                     data["location"] = result.find('div', attrs={'class':'cb7'}).text
                     data["urlcar"] = "https://bonbanh.com/" + result.find('a', attrs={'itemprop':'url'}).get('href')
                     data['image'] = result.find('img',attrs={"class":"h-car-img"}).get('src')
-                    # print(data)
-                    redis_key = f"{data}" 
-                    exists = redis_client.sismember(redis_set_key, str(data))
-                    if not exists:
-                        redis_client.sadd(redis_set_key, str(data))
-                        redis_client.expire(redis_set_key, 60*60*24)
-                        redis_client.setex(redis_key, 60*60*24, str(data))
-
-                        data = {k: (v if v != "None" else None) for k, v in data.items()}
-                        # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
-                        # send data telegram message
-                        asyncio.run(sendBot(data))
+                    data['sent'] = False
+                    conn.push_data('car', data)
+                conn.close()
                 return  
         except :
             pass        
