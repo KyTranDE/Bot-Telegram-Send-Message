@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
 import random
 import redis
-from messageTelegram.app import sendBot
+from app import sendBot
 import asyncio
 import nest_asyncio
 import time

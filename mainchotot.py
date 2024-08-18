@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import json
 import time
 import redis
-from messageTelegram.app import sendBot
+from app import sendBot
 import asyncio
 import nest_asyncio
 from Utils import postgres_tool
