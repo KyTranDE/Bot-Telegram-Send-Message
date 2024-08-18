@@ -3,7 +3,7 @@ from tabulate import tabulate
 import pandas as pd
 import emoji
 from tqdm import tqdm
-# from Utils.logger import logger
+from Utils.logger import logger
 
 
 class PostgresTool():
@@ -72,27 +72,21 @@ class PostgresTool():
 
             df = pd.DataFrame(rows, columns=columns)
             df.to_csv(output_path, index=False)
-            # logger(f'./logs/export_{table_name}.log', emoji.emojize(f":check_mark_button: Data exported successfully to {output_path}! :check_mark_button:"))
+            logger(f'./logs/export_{table_name}.log', emoji.emojize(f":check_mark_button: Data exported successfully to {output_path}! :check_mark_button:"))
         except Exception as e:
             error_message = f":cross_mark: {str(e)}"
-            # logger(f'./logs/export_{table_name}.log', emoji.emojize(error_message))
+            logger(f'./logs/export_{table_name}.log', emoji.emojize(error_message))
 
     def push_data(self, table_name, data):
         try:
-            columns = self.get_columns(table_name)
-            data_keys = data.keys()
-
-            if not set(data_keys).issubset(set(columns)):
-                raise ValueError("Data keys do not match table columns")
-
-            columns_str = ', '.join(data_keys)
-            values_str = ', '.join([f'%({key})s' for key in data_keys])
-
-            query = f'INSERT INTO "{table_name}" ({columns_str}) VALUES ({values_str})'
-            self.cur.execute(query, data)
+            columns = ', '.join(data.keys())
+            values = ', '.join(['%s'] * len(data))
+            query = f'INSERT INTO "{table_name}" ({columns}) VALUES ({values})'
+    
+            self.cur.execute(query, list(data.values()))
             self.conn.commit()
-            # logger.info(f"Data pushed successfully to {table_name}")
+            logger(f'./logs/export_{table_name}.log', emoji.emojize(f":check_mark_button: Data pushed successfully to {table_name}! :check_mark_button:"))
         except Exception as e:
             self.conn.rollback()
             error_message = f":cross_mark: {str(e)}"
-            # logger.error(error_message)
+            logger(f'./logs/export_{table_name}.log', emoji.emojize(error_message))

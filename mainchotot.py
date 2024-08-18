@@ -7,7 +7,7 @@ import redis
 from messageTelegram.app import sendBot
 import asyncio
 import nest_asyncio
-
+# from 
 nest_asyncio.apply()
 
 with open('./config/config.yml', 'r') as f:
@@ -32,19 +32,21 @@ def getData(urlchotot):
         data["location"] = newSoup.find('span', class_ = "bwq0cbs flex-1").text
         data["urlcar"] = "https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href')
         data['image'] = "https://xe.chotot.com"+newSoup.findAll('img', attrs={'sizes':'100vw'})[1].get('src')
-        redis_key = f"{data}" 
-        exists = redis_client.sismember(redis_set_key, str(data))
-        if not exists:
-            redis_client.sadd(redis_set_key, str(data))
-            redis_client.expire(redis_set_key, 60*60*24)
-            redis_client.setex(redis_key, 60*60*24, str(data))
 
-            data = {k: (v if v != "None" else None) for k, v in data.items()}
-            # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
-            # send data telegram message
-            asyncio.run(sendBot(data))
-        else:
-            pass
+        print(data)
+        # redis_key = f"{data}" 
+        # exists = redis_client.sismember(redis_set_key, str(data))
+        # if not exists:
+        #     redis_client.sadd(redis_set_key, str(data))
+        #     redis_client.expire(redis_set_key, 60*60*24)
+        #     redis_client.setex(redis_key, 60*60*24, str(data))
+
+        #     data = {k: (v if v != "None" else None) for k, v in data.items()}
+        #     # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
+        #     # send data telegram message
+        #     asyncio.run(sendBot(data))
+        # else:
+        #     pass
 
 def main():
     urlchotot = config['url']['urlchotot']

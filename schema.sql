@@ -1,7 +1,7 @@
 CREATE TABLE "car" (
   "name" varchar PRIMARY KEY,
-  "year" varchar,
   "price" varchar,
-  "description" varchar,
-  "urlcar" varchar
+  "location" varchar,
+  "urlcar" varchar,
+  "image" varchar
 );

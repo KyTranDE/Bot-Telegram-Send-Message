@@ -4,11 +4,11 @@ url:
   urlproxy : 'https://api.proxyscrape.com/v3/free-proxy-list/get?request=getproxies&skip={}&proxy_format=protocolipport&format=json&limit=15'
 
 database:
-  host: "127.0.0.1"
-  port: "5434"
-  user: "telebot"
-  password: "telebot@123"
-  database : "dbTelebot"
+  host: "localhost"
+  port: "5432"
+  user: "botdatabase"
+  password: "botdatabase"
+  database : "botdatabase"
 
 headers:
   accept: 'application/json, text/plain, */*'
