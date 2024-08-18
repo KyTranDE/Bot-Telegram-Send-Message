@@ -30,7 +30,7 @@ class PostgresTool():
         self.conn.close()
 
     def query(self, sql_query, show=True):
-        print(sql_query)
+        # print(sql_query)
         try:
             self.cur.execute("ROLLBACK")
             self.cur.execute(sql_query)

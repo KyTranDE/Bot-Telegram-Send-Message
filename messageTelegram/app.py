@@ -9,9 +9,6 @@ import yaml
 with open('./config/config.yml', 'r') as f:
     config = yaml.safe_load(f)
 
-database = config["database"]
-conn = postgres_tool.PostgresTool(**database)
-
 async def sendBot(data):
     message_template = """
     🚗 <b>{name}</b>
@@ -48,10 +45,12 @@ async def sendBot(data):
 
 # get data từ database rồi send message
 def main():
-    query = "SELECT * FROM car_data ORDER BY id DESC LIMIT 10"
-    data = conn.execute_query(query)
+    database = config["database"]
+    conn = postgres_tool.PostgresTool(**database)
+    data =  conn.query("SELECT * FROM car WHERE sent = FALSE",False)
     for item in data:
         asyncio.run(sendBot(item))
+        conn.query(f"UPDATE car SET sent = TRUE WHERE urlcar = {item['urlcar']};",False)
 
 
 
