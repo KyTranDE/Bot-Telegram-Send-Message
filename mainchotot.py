@@ -7,7 +7,7 @@ import redis
 from messageTelegram.app import sendBot
 import asyncio
 import nest_asyncio
-# from 
+from Utils import postgres_tool
 nest_asyncio.apply()
 
 with open('./config/config.yml', 'r') as f:
@@ -18,35 +18,26 @@ print(redis_sv)
 redis_client = redis.Redis(**redis_sv)
 
 def getData(urlchotot):
-    response = requests.get(url=urlchotot)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    all_results = soup.find_all('div', attrs={'tabindex':"0"})
-    redis_set_key = "carchotot"
-
-    for result in all_results:
-        newRequest = requests.get("https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href'))
-        newSoup = BeautifulSoup(newRequest.text, 'html.parser')
-        data = {}
-        data["name"] = newSoup.find('h1').text
-        data["price"] = newSoup.find('b', class_='p26z2wb').text
-        data["location"] = newSoup.find('span', class_ = "bwq0cbs flex-1").text
-        data["urlcar"] = "https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href')
-        data['image'] = "https://xe.chotot.com"+newSoup.findAll('img', attrs={'sizes':'100vw'})[1].get('src')
-
-        print(data)
-        # redis_key = f"{data}" 
-        # exists = redis_client.sismember(redis_set_key, str(data))
-        # if not exists:
-        #     redis_client.sadd(redis_set_key, str(data))
-        #     redis_client.expire(redis_set_key, 60*60*24)
-        #     redis_client.setex(redis_key, 60*60*24, str(data))
-
-        #     data = {k: (v if v != "None" else None) for k, v in data.items()}
-        #     # print(json.dumps(data, ensure_ascii=False, indent=2)) # debug
-        #     # send data telegram message
-        #     asyncio.run(sendBot(data))
-        # else:
-        #     pass
+    try:
+        response = requests.get(url=urlchotot)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        all_results = soup.find_all('div', attrs={'tabindex':"0"})
+        db_config = config["database"]    
+        conn =  postgres_tool.PostgresTool(**db_config)
+        for result in all_results:
+            newRequest = requests.get("https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href'))
+            newSoup = BeautifulSoup(newRequest.text, 'html.parser')
+            data = {}
+            data["name"] = newSoup.find('h1').text
+            data["price"] = newSoup.find('b', class_='p26z2wb').text
+            data["location"] = newSoup.find('span', class_ = "bwq0cbs flex-1").text
+            data["urlcar"] = "https://xe.chotot.com"+result.find('a',attrs={'itemprop':'item'}).get('href')
+            data['image'] = "https://xe.chotot.com"+newSoup.findAll('img', attrs={'sizes':'100vw'})[1].get('src')
+            data['sent'] = False
+            conn.push_data('car', data)
+        conn.close()
+    except :
+        pass
 
 def main():
     urlchotot = config['url']['urlchotot']
