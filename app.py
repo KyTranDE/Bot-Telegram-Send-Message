@@ -59,7 +59,7 @@ def main():
             "image": item[4]
         }
         asyncio.run(sendBot(datasend))
-        conn.query(f"UPDATE car SET sent = TRUE WHERE urlcar = {datasend['urlcar']};",False)
+        conn.query(f"UPDATE car SET sent = TRUE WHERE urlcar = '{datasend['urlcar']}';",False)
 
 
 
