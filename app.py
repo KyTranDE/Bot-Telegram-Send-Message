@@ -56,7 +56,7 @@ def main():
                 "name": item[3],
                 "price": item[1],
                 "location": item[2],
-                "urlcar": item[0],
+                "urlcar": item[0],ls
                 "image": item[4]
             }
             asyncio.run(sendBot(datasend))
