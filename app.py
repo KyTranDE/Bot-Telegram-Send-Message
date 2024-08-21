@@ -34,36 +34,63 @@ async def sendBot(data):
         name=data['name'], price=data['price'], location=data['location'], url=data['urlcar'])
 
     for chat_id in chat_ids:
-        # Gửi tin nhắn
-        await bot.send_photo(
-            chat_id=chat_id,
-            photo=data['image'],
-            caption=message,
-            parse_mode='HTML'
-        )
-        sleep(1)
+        dataimage = data["image"]
+        try:
+            await bot.send_photo(
+                chat_id=chat_id,
+                photo=dataimage,
+                caption=message,
+                parse_mode='HTML'
+            )
+            print(f"Message sent to {chat_id} successfully.")
+        except Exception as e:
+            print(f"Failed to send message to {chat_id}: {e}")
+        
+        # Tạm dừng 3 giây giữa các lần gửi tin nhắn
+        await asyncio.sleep(3)
 
-# get data từ database rồi send message
-def main():
+    # Cập nhật trạng thái sau khi gửi thành công
     try:
         database = config["database"]
         conn = postgres_tool.PostgresTool(**database)
-        data =  conn.query("SELECT * FROM car WHERE sent = FALSE",False)
-        for item in data:
-            # ('https://bonbanh.com/xe-audi-q7-3.0-at-2014-5747161', ' 739 Triệu ', ' Liên hệ: Auto Hồng Phúc C5/15B, Bình Hưng, Bình Chánh TP HCM ĐT: 0907 222 222 - 0977 775 882 ', 'Audi Q7 3.0 AT - 2014', 'https://s.bonbanh.com/uploads/users/49587/car/5747161/s_1722334908.441.jpg', False)
-            # item dictionary
-            datasend = {
-                "name": item[3],
-                "price": item[1],
-                "location": item[2],
-                "urlcar": item[0],ls
-                "image": item[4]
-            }
-            asyncio.run(sendBot(datasend))
-            conn.query(f"UPDATE car SET sent = TRUE WHERE urlcar = '{datasend['urlcar']}';",False)
-    except :
-        pass
+        conn.query(f"UPDATE car SET sent = TRUE WHERE urlcar = '{data['urlcar']}';", False)
+    except Exception as e:
+        print(f"Failed to update database: {e}")
+    finally:
+        conn.close()
 
+# get data từ database rồi send message
+def main():
+    # try:
+    #     database = config["database"]
+    #     conn = postgres_tool.PostgresTool(**database)
+    #     data =  conn.query("SELECT * FROM car WHERE sent = FALSE",False)
+    #     for item in data:
+    #         # ('https://bonbanh.com/xe-audi-q7-3.0-at-2014-5747161', ' 739 Triệu ', ' Liên hệ: Auto Hồng Phúc C5/15B, Bình Hưng, Bình Chánh TP HCM ĐT: 0907 222 222 - 0977 775 882 ', 'Audi Q7 3.0 AT - 2014', 'https://s.bonbanh.com/uploads/users/49587/car/5747161/s_1722334908.441.jpg', False)
+    #         # item dictionary
+    #         datasend = {
+    #             "name": item[3],
+    #             "price": item[1],
+    #             "location": item[2],
+    #             "urlcar": item[0],
+    #             "image": item[4]
+    #         }
+    #         asyncio.run(sendBot(datasend))
+    #         conn.query(f"UPDATE car SET sent = TRUE WHERE urlcar = '{datasend['urlcar']}';",False)
+    # except :
+    #     pass
+    datasend = {
+        "name": "admin handsome",
+        "price":
+        " 911117 Triều ",
+        "location":
+        "Phường Hố Nai, Thành phố Biên Hòa, Đồng Nai",
+        "urlcar":
+        "https://bonbanh.com/xe-hyundai-starex-van-2.5-mt-2005-5571723",
+        "image":
+        "https://s.bonbanh.com/uploads/users/49587/car/5747161/s_1722334908.441.jpg"
+    }
+    asyncio.run(sendBot(datasend))
 
 if __name__ == "__main__":
     while True:
