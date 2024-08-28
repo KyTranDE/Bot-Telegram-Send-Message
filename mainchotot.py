@@ -20,6 +20,7 @@ with open('./config/config.yml', 'r') as f:
 def getData(urlchotot):
     try:
         response = requests.get(url=urlchotot)
+        print(response.status_code)
         soup = BeautifulSoup(response.text, 'html.parser')
         all_results = soup.find_all('div', attrs={'tabindex':"0"})
         db_config = config["database"]    
